@@ -1,0 +1,40 @@
+<div class="panel panel-primary">
+    <div class="panel-heading row">
+      <div class="col-xs-4"><h3 class="panel-title">Movie List</h3></div>
+
+      
+      <!-- Search Field -->
+    <div class=col-md-6>
+      <div class="filter-wrap">
+        <input [(ngModel)]="searchText" placeholder="Type a movie title here" class="form-control">
+       
+      </div>
+    </div>
+
+
+  </div>
+  <div class="panel-body">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Director</th>
+          <th>Release Date</th>
+          <th>Type</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let movie of movies | filter: searchText">
+          <td>{{movie.title}}</td>
+          <td>{{movie.director}}</td>
+          <td>{{movie.releaseDate}}</td>
+          <td>{{movie.type}}</td>
+          <td><button (click)="deleteMovie(movie.title)" class="btn btn-danger">Delete</button>
+            <button (click)="updateMovie(movie.title)" class="btn btn-warning" style="margin-left: 10px">Update</button>
+              <button (click)="movieDetails(movie.title)" class="btn btn-success" style="margin-left: 10px">Details</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
