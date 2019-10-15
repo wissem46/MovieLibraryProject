@@ -16,8 +16,8 @@ public class Movie {
 	@JsonSerialize(using = LocalDateSerializer.class)
 	private LocalDate releaseDate;
 	private String type;
-	private Long id;
-	public static Long count=1L;
+	//private Long id;
+	//public static Long count=1L;
 
 	public Movie() {
 	}
@@ -28,17 +28,17 @@ public class Movie {
 		this.director = director;
 		this.releaseDate = releaseDate;
 		this.type = type;
-		this.id=count++;
+		//this.id=count++;
 		
 	}
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
+//	public Long getId() {
+//		return id;
+//	}
+//
+//	public void setId(Long id) {
+//		this.id = id;
+//	}
 
 	public String getTitle() {
 		return title;

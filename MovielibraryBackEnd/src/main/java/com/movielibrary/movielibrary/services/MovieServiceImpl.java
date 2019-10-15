@@ -16,25 +16,25 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.movielibrary.movielibrary.entities.Movie;
+import com.movielibrary.movielibrary.util.Utilities;
 
 @Service
 public class MovieServiceImpl implements MovieService {
-	private List<Movie> list;
+
+	private final static String jsonFilePath = "src/main/resources/json/movies.json";
 	private static List<Movie> movies = new ArrayList<Movie>();
 
 	@Override
 	public List<Movie> getAllMovies() {
-		return moviesJsonToJavaParser();
+		return Utilities.moviesJsonToJavaParser(movies, new File(jsonFilePath));
 	}
 
 	@Override
 	public Movie getMovieByTitle(String title) {
-		System.out.println(title);
 
-		movies = moviesJsonToJavaParser();
+		movies = Utilities.moviesJsonToJavaParser(movies, new File(jsonFilePath));
 		for (Movie m : movies) {
 			if (m.getTitle().equals(title)) {
-				System.out.println("loool");
 				return m;
 			}
 		}
@@ -44,19 +44,18 @@ public class MovieServiceImpl implements MovieService {
 	// Creation of a movie
 	@Override
 	public Movie createMovie(Movie movie) {
-		movie.setId(Movie.count);
-		movies = moviesJsonToJavaParser();
+		
+		movies = Utilities.moviesJsonToJavaParser(movies, new File(jsonFilePath));
 		List<Movie> newMoviesList = new ArrayList<Movie>(movies);
 		newMoviesList.add(movie);
-		movieJavaToJsonParser(newMoviesList);
+		Utilities.movieJavaToJsonParser(newMoviesList, new File(jsonFilePath));
 		return movie;
 	}
 
 	// Delete of a movie
 	@Override
 	public List<Movie> deleteMovieByTitle(String title) {
-		movies = moviesJsonToJavaParser();
-		
+		movies = Utilities.moviesJsonToJavaParser(movies, new File(jsonFilePath));
 
 		List<Movie> newMoviesList = new ArrayList<Movie>(movies);
 		for (Iterator<Movie> iter = newMoviesList.iterator(); iter.hasNext();) {
@@ -64,91 +63,24 @@ public class MovieServiceImpl implements MovieService {
 			if (movie.getTitle().equals(title))
 				iter.remove();
 		}
-		movieJavaToJsonParser(newMoviesList);
+		Utilities.movieJavaToJsonParser(newMoviesList, new File(jsonFilePath));
 		return newMoviesList;
 	}
 
 	// Update of a movie
 	@Override
 	public List<Movie> updateMovie(Movie newMovie) {
-		movies = moviesJsonToJavaParser();
+		movies = Utilities.moviesJsonToJavaParser(movies, new File(jsonFilePath));
 		for (Iterator<Movie> iter = movies.iterator(); iter.hasNext();) {
 			Movie oldMovie = (Movie) iter.next();
-			System.out.println("Current movie"+oldMovie.getTitle());
-			System.out.println("New movie"+newMovie.getTitle());
-			
+
 			if (newMovie.getTitle().equals(oldMovie.getTitle())) {
-				System.out.println("***********************************");
 
 				movies.set(movies.indexOf(oldMovie), newMovie);
-				movieJavaToJsonParser(movies);
+				Utilities.movieJavaToJsonParser(movies, new File(jsonFilePath));
 			}
 
 		}
-		return movies;
-	}
-
-	@Override
-	public List<Movie> moviesJsonToJavaParser() {
-		ObjectMapper objectMapper = new ObjectMapper();
-
-		try {
-			movies = Arrays
-					.asList(objectMapper.readValue(new File("src/main/resources/json/movies.json"), Movie[].class));
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return movies;
-
-	}
-
-	@Override
-	public void movieJavaToJsonParser(List<Movie> movies) {
-
-		ObjectMapper objectMapper = new ObjectMapper();
-		try {
-			objectMapper.writeValue(new File("src/main/resources/json/movies.json"), movies);
-		} catch (JsonGenerationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public Movie getMovieByID(Long id) {
-		movies = moviesJsonToJavaParser();
-		
-		return movies.get(id.intValue());
-	}
-
-	@Override
-	public List<Movie> deleteMovieByID(Long id) {
-
-		movies = moviesJsonToJavaParser();
-		List<Movie> newMoviesList = new ArrayList<Movie>(movies);
-		for (Iterator<Movie> iter = newMoviesList.iterator(); iter.hasNext();) {
-			Movie movie = (Movie) iter.next();
-			if (movie.getId().equals(id))
-				iter.remove();
-		}
-		movieJavaToJsonParser(newMoviesList);
-		return newMoviesList;
-
-	}
-
-	@Override
-	public List<Movie> updateMovieByID(Long id, Movie newMovie) {
-		movies = moviesJsonToJavaParser();
-
-		movies.set(id.intValue(), newMovie);
 		return movies;
 	}
 

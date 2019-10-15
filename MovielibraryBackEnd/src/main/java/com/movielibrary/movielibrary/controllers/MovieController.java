@@ -33,7 +33,6 @@ public class MovieController {
 	
 	@GetMapping("/movies/{title}")
 	public ResponseEntity<?> getMovie(@PathVariable("title") String title) {
-		System.out.println(title);
 	Movie movie = movieService.getMovieByTitle(title);
 	if (movie == null) {
 	return new ResponseEntity<String>("No Movie found with title " + title, HttpStatus.NOT_FOUND);
@@ -44,7 +43,6 @@ public class MovieController {
 	
 	@PostMapping("/movies")
 	public Movie createMovie(@RequestBody Movie movie) {
-		System.out.println(movie.getTitle());
 
 		//return new ResponseEntity<>(movieService.createMovie(movie), HttpStatus.CREATED);
 	return movieService.createMovie(movie);
@@ -53,7 +51,6 @@ public class MovieController {
 	@DeleteMapping("/movies/{title}")
 	public ResponseEntity<?> removeMovieByTitle(@PathVariable("title") String title)
 	{	
-		System.out.println("delete controller");
 
 		movieService.deleteMovieByTitle(title);
 		//return movieService.getAllMovies();
